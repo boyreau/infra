@@ -1,0 +1,4 @@
+- name: "My DevOps architecture"
+  hosts: gitea
+  tasks:
+    - name: "Deploy gitea"

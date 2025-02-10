@@ -28,17 +28,15 @@ jobs:
       -
         name: Generate graph
         run: |
-          # source venv/bin/activate
-          # ansible-playbook-grapher \
-          #   --title "My super well designed mess" \
-          #   --include-role-tasks \
-          #   --renderer mermaid-flowchart \
-          #   --show-handlers \
-          #   -i ./inventory.yaml \
-          #   -o ./graph \
-          #   ./playbook.yaml
-          git clone ${{ GITHUB_SERVER_URL }}/${{ github.actor }}/.github ./profile_repo
-          ls ./profile_repo -lahR
+          source venv/bin/activate
+          ansible-playbook-grapher \
+            --title "My super well designed mess" \
+            --include-role-tasks \
+            --renderer mermaid-flowchart \
+            --show-handlers \
+            -i ./inventory.yaml \
+            -o ./graph \
+            ./playbook.yaml
       
       -
         name: Update profile graph

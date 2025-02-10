@@ -18,6 +18,7 @@ jobs:
       -
         name: Generate graph
         run: |
+          source venv/bin/activate
           ansible-playbook-grapher
             --title "My super well designed mess"
             --include-role-tasks
@@ -35,8 +36,8 @@ jobs:
       -
         name: Update profile graph
         run: |
-          cat README.md graph.mmd >> profile/README.md;
-          git add profile/README.md;
-          git commit -m 'profile update'
+          cat README.md graph.mmd >> profile/README.md
+          git add profile/README.md
+          git commit -m 'profile graph automatic update'
           git push
 

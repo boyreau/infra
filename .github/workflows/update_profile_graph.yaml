@@ -1,0 +1,42 @@
+name: Update profile readme with up-to-date infrastructure
+on: [push]
+
+jobs:
+  Build-Graph:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout repository
+        uses: actions/checkout@v4
+      -
+        name: Install dependencies
+        run: |
+          python3 -m venv venv
+          source venv/bin/activate
+          pip install ansible
+          pip install ansible-playbook-grapher
+      -
+        name: Generate graph
+        run: |
+          ansible-playbook-grapher
+            --title "My super well designed mess"
+            --include-role-tasks
+            --renderer mermaid-flowchart
+            --show-handlers ./playbook.yaml
+            -i inventory.yaml
+            -o graph.mmd
+
+      -
+        name: Checkout profile readme
+        uses: actions/checkout@v4
+        with:
+          repository: github.com/atuuuu/.github
+
+      -
+        name: Update profile graph
+        run: |
+          cat README.md graph.mmd >> profile/README.md;
+          git add profile/README.md;
+          git commit -m 'profile update'
+          git push
+

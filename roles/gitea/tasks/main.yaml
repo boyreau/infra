@@ -13,6 +13,8 @@
 
 - name: "Deploy gitea binary and directories"
   ansible.builtin.script: gitea_install.sh
+  notify:
+    - Restart gitea
 
 - name: "Install gitea configuration"
   ansible.builtin.template:
@@ -21,6 +23,8 @@
     owner: git
     group: git
     mode: '0600'
+  notify:
+    - Restart gitea
 
 - name: "Set up gitea service"
   ansible.builtin.copy:

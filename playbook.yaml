@@ -1,4 +1,4 @@
-- name: "My DevOps architecture"
+- name: "Gitea personnal instance"
   hosts: gitea
   become: true
   become_method: sudo

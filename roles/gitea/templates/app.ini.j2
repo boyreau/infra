@@ -16,9 +16,9 @@ TEMP_PATH = /tmp/gitea/uploads
 [server]
 APP_DATA_PATH = {{ gitea_work_dir }}
 SSH_DOMAIN = {{ hostname }}
-HTTP_PORT = 3001
-ROOT_URL = http://{{ hostname }}:3001/
-DISABLE_SSH = true
+HTTP_PORT = 3000
+ROOT_URL = http://{{ hostname }}:3000/
+DISABLE_SSH = false
 ; In rootless gitea container only internal ssh server is supported
 START_SSH_SERVER = true
 SSH_PORT = 2222

@@ -41,18 +41,17 @@ jobs:
       -
         name: Update profile graph
         run: |
-          cat profile_repo/README.md > profile_repo/profile/README.md
-          echo '```mermaid' >> profile_repo/profile/README.md
-          cat graph.mmd >> profile_repo/profile/README.md
-          echo '```' >> profile_repo/profile/README.md
+          cat profile_repo/template/README.md > profile_repo/README.md
+          echo '```mermaid' >> profile_repo/README.md
+          cat graph.mmd >> profile_repo/README.md
+          echo '```' >> profile_repo/README.md
           cd profile_repo
 
           git config --global user.email "action@git.ea.hub"
           git config --global user.name "Action"
           git config --global credential.helper '!f() { sleep 1; echo "username=${{ github.actor }} token=${{ secrets.GIT_TOKEN }}"; }; f'
 
-          git add profile/README.md
+          git add README.md
           git commit -m 'profile graph automatic update'
-          # git -c http.extraHeader="Authorization: Basic `base64 ${{ github.actor }}:${{ secrets.GIT_TOKEN }}`"
           git push
 

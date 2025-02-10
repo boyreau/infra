@@ -1,4 +1,4 @@
-name: Update profile readme with up-to-date infrastructure ${{ github.actor }}
+name: Update profile readme with up-to-date infrastructure
 on: [push]
 
 jobs:

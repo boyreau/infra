@@ -8,25 +8,25 @@ jobs:
       -
         name: Checkout repository
         uses: actions/checkout@v4
-      -
-        name: Install dependencies
-        run: |
-          python3 -m venv venv
-          source venv/bin/activate
-          pip install ansible
-          pip install ansible-playbook-grapher
+      # -
+      #   name: Install dependencies
+      #   run: |
+      #     python3 -m venv venv
+      #     source venv/bin/activate
+      #     pip install ansible
+      #     pip install ansible-playbook-grapher
       -
         name: Generate graph
         run: |
-          source venv/bin/activate
-          ansible-playbook-grapher \
-            --title "My super well designed mess" \
-            --include-role-tasks \
-            --renderer mermaid-flowchart \
-            --show-handlers \
-            -i ./inventory.yaml \
-            -o ./graph \
-            ./playbook.yaml
+          # source venv/bin/activate
+          # ansible-playbook-grapher \
+          #   --title "My super well designed mess" \
+          #   --include-role-tasks \
+          #   --renderer mermaid-flowchart \
+          #   --show-handlers \
+          #   -i ./inventory.yaml \
+          #   -o ./graph \
+          #   ./playbook.yaml
           git clone ${{ GITHUB_SERVER_URL }}/${{ github.actor }}/.github ./profile_repo
 
       # -
@@ -36,11 +36,11 @@ jobs:
       #     repository: ${{ github.actor }}/.github
       #     path: ./profile_repo
       -
-        name: Update profile graph
-        run: |
-          cat profile_repo/README.md graph.mmd > profile_repo/profile/README.md
-          cd profile_repo
-          git add profile/README.md
-          git commit -m 'profile graph automatic update'
-          git push
+        # name: Update profile graph
+        # run: |
+        #   cat profile_repo/README.md graph.mmd > profile_repo/profile/README.md
+        #   cd profile_repo
+        #   git add profile/README.md
+        #   git commit -m 'profile graph automatic update'
+        #   git push
 

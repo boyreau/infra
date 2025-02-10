@@ -1,4 +1,6 @@
 - name: "My DevOps architecture"
   hosts: gitea
-  tasks:
-    - name: "Deploy gitea"
+  become: true
+  become_method: sudo
+  roles:
+    - gitea

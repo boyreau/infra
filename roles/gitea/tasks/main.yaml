@@ -1,0 +1,35 @@
+- name: "Deploy gitea"
+  community.general.snap:
+    name: gitea
+    state: present
+
+- name: "Ensures /etc/gitea exists"
+  file:
+    path: /etc/gitea
+    state: directory
+
+- name: "Create gitea user and group"
+  ansible.builtin.user:
+    name: git
+    shell: /sbin/nologin
+    system: true
+    create_home: false
+    expires: -1
+
+- name: "Install gitea configuration"
+  ansible.builtin.template:
+    src: app.ini.j2
+    dest: /etc/gitea/app.ini
+    owner: git
+    group: git
+    mode: '0600'
+
+- name: "Set up gitea service"
+  ansible.builtin.copy:
+    src: gitea.service
+    dest: /etc/systemd/system/gitea.service
+    owner: root
+    group: root
+    mode: '0600'
+  notify:
+    - Restart gitea

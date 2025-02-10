@@ -1,8 +1,8 @@
 portfolio_local_prod:
   hosts:
     gitea:
-      ansible_host: 35.185.212.228
+      ansible_host: 35.185.108.101
     action_runner:
-      ansible_host: 35.185.212.228
-    # conan:
-    #   ansible_host: 127.0.0.1
+      # ansible_host: 35.185.212.228
+    conan:
+      # ansible_host: 127.0.0.1

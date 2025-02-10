@@ -1,4 +1,4 @@
-name: Update profile readme with up-to-date infrastructure
+name: Update profile readme with up-to-date infrastructure ${{ github.actor }}
 on: [push]
 
 jobs:
@@ -24,21 +24,22 @@ jobs:
             --include-role-tasks \
             --renderer mermaid-flowchart \
             --show-handlers \
-            -i inventory.yaml \
-            -o /tmp/graph \
+            -i ./inventory.yaml \
+            -o ./graph \
             ./playbook.yaml
 
       -
         name: Checkout profile readme
         uses: actions/checkout@v4
         with:
-          # Don't mind the ugly context abuse please
           repository: ${{ github.actor }}/.github
+          path: ./profile_repo
 
       -
         name: Update profile graph
         run: |
-          cat README.md /tmp/graph.mmd >> profile/README.md
+          cat profile_repo/README.md graph.mmd > profile_repo/profile/README.md
+          cd profile_repo
           git add profile/README.md
           git commit -m 'profile graph automatic update'
           git push

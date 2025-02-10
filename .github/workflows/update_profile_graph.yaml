@@ -27,14 +27,14 @@ jobs:
             -i ./inventory.yaml \
             -o ./graph \
             ./playbook.yaml
+          git clone https://github.com/${{ github.actor }}/.github ./profile_repo
 
-      -
-        name: Checkout profile readme
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ github.actor }}/.github
-          path: ./profile_repo
-
+      # -
+      #   name: Checkout profile readme
+      #   uses: actions/checkout@v4
+      #   with:
+      #     repository: ${{ github.actor }}/.github
+      #     path: ./profile_repo
       -
         name: Update profile graph
         run: |

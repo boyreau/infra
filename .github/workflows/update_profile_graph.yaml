@@ -28,6 +28,7 @@ jobs:
           #   -o ./graph \
           #   ./playbook.yaml
           git clone ${{ GITHUB_SERVER_URL }}/${{ github.actor }}/.github ./profile_repo
+          ls ./profile_repo -lahR
 
       # -
       #   name: Checkout profile readme

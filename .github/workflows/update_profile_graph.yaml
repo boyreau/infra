@@ -42,7 +42,10 @@ jobs:
       -
         name: Update profile graph
         run: |
-          cat profile_repo/README.md graph.mmd > profile_repo/profile/README.md
+          cat profile_repo/README.md > profile_repo/profile/README.md
+          echo '```mermaid' >> profile_repo/profile/README.md
+          cat graph.mmd >> profile_repo/profile/README.md
+          echo '```' >> profile_repo/profile/README.md
           cd profile_repo
 
           git config --global user.email "action@git.ea.hub"

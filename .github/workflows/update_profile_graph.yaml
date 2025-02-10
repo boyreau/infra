@@ -8,6 +8,14 @@ jobs:
       -
         name: Checkout repository
         uses: actions/checkout@v4
+
+      -
+        name: Checkout profile readme
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.actor }}/.github
+          path: ./profile_repo
+
       # -
       #   name: Install dependencies
       #   run: |
@@ -15,28 +23,23 @@ jobs:
       #     source venv/bin/activate
       #     pip install ansible
       #     pip install ansible-playbook-grapher
-      -
-        name: Generate graph
-        run: |
-          # source venv/bin/activate
-          # ansible-playbook-grapher \
-          #   --title "My super well designed mess" \
-          #   --include-role-tasks \
-          #   --renderer mermaid-flowchart \
-          #   --show-handlers \
-          #   -i ./inventory.yaml \
-          #   -o ./graph \
-          #   ./playbook.yaml
-          git clone ${{ GITHUB_SERVER_URL }}/${{ github.actor }}/.github ./profile_repo
-          ls ./profile_repo -lahR
-
+      #
       # -
-      #   name: Checkout profile readme
-      #   uses: actions/checkout@v4
-      #   with:
-      #     repository: ${{ github.actor }}/.github
-      #     path: ./profile_repo
-      -
+      #   name: Generate graph
+      #   run: |
+      #     # source venv/bin/activate
+      #     # ansible-playbook-grapher \
+      #     #   --title "My super well designed mess" \
+      #     #   --include-role-tasks \
+      #     #   --renderer mermaid-flowchart \
+      #     #   --show-handlers \
+      #     #   -i ./inventory.yaml \
+      #     #   -o ./graph \
+      #     #   ./playbook.yaml
+      #     git clone ${{ GITHUB_SERVER_URL }}/${{ github.actor }}/.github ./profile_repo
+      #     ls ./profile_repo -lahR
+      #
+      # -
         # name: Update profile graph
         # run: |
         #   cat profile_repo/README.md graph.mmd > profile_repo/profile/README.md

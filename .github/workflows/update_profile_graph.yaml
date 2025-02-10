@@ -31,10 +31,9 @@ jobs:
         run: |
           source venv/bin/activate
           ansible-playbook-grapher \
-            --title "My super well designed mess" \
-            --include-role-tasks \
+            --title "My super-well-designed Ansible mess" \
             --renderer mermaid-flowchart \
-            --show-handlers \
+            --only-roles \
             -i ./inventory.yaml \
             -o ./graph \
             ./playbook.yaml

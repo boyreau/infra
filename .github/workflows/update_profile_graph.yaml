@@ -48,5 +48,6 @@ jobs:
           git config --global user.name "Action"
           git add profile/README.md
           git commit -m 'profile graph automatic update'
+          git config --unset-all http.https://github.com/.extraheader
           git push
 

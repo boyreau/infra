@@ -16,6 +16,7 @@ jobs:
           repository: '${{ github.actor }}/.github'
           ref: 'main'
           path: ./profile_repo
+          ssh-key: ${{ secrets.SSH_KEY }}
 
       -
         name: Install dependencies

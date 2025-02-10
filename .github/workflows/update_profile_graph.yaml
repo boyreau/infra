@@ -19,13 +19,14 @@ jobs:
         name: Generate graph
         run: |
           source venv/bin/activate
-          ansible-playbook-grapher
-            --title "My super well designed mess"
-            --include-role-tasks
-            --renderer mermaid-flowchart
-            --show-handlers ./playbook.yaml
-            -i inventory.yaml
-            -o graph.mmd
+          ansible-playbook-grapher \
+            --title "My super well designed mess" \
+            --include-role-tasks \
+            --renderer mermaid-flowchart \
+            --show-handlers \
+            -i inventory.yaml \
+            -o graph \
+            ./playbook.yaml
 
       -
         name: Checkout profile readme

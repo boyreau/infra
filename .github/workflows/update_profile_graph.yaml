@@ -25,7 +25,7 @@ jobs:
             --renderer mermaid-flowchart \
             --show-handlers \
             -i inventory.yaml \
-            -o graph \
+            -o /tmp/graph \
             ./playbook.yaml
 
       -
@@ -37,7 +37,7 @@ jobs:
       -
         name: Update profile graph
         run: |
-          cat README.md graph.mmd >> profile/README.md
+          cat README.md /tmp/graph.mmd >> profile/README.md
           git add profile/README.md
           git commit -m 'profile graph automatic update'
           git push

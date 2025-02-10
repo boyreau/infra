@@ -1,5 +1,10 @@
+# Various gitea secrets. Used for the app.ini.j2 template substitution
 internal_token: 
 jwt_secret: 
 lfs_jwt_secret: 
 
+# Work dir. Change to /var/snap/gitea/common/data on Ubuntu
 gitea_work_dir: "/var/lib/gitea/"
+
+# Hostname used to access your gitea instance
+hostname: "localhost"

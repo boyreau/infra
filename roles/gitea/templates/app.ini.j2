@@ -15,9 +15,9 @@ TEMP_PATH = /tmp/gitea/uploads
 
 [server]
 APP_DATA_PATH = {{ gitea_work_dir }}
-SSH_DOMAIN = localhost
+SSH_DOMAIN = {{ hostname }}
 HTTP_PORT = 3001
-ROOT_URL = http://localhost:3001/
+ROOT_URL = http://{{ hostname }}:3001/
 DISABLE_SSH = true
 ; In rootless gitea container only internal ssh server is supported
 START_SSH_SERVER = true
@@ -25,14 +25,14 @@ SSH_PORT = 2222
 SSH_LISTEN_PORT = 2222
 BUILTIN_SSH_SERVER_USER = git
 LFS_START_SERVER = false
-DOMAIN = localhost
+DOMAIN = {{ hostname }}
 LFS_JWT_SECRET = {{ lfs_jwt_secret }}
 OFFLINE_MODE = true
 
 [database]
 PATH = {{ gitea_work_dir }}/data/gitea.db
 DB_TYPE = sqlite3
-HOST = localhost:3306
+HOST = {{ hostname }}:3306
 NAME = gitea
 USER = root
 PASSWD = 
@@ -74,7 +74,7 @@ ENABLE_CAPTCHA = false
 DEFAULT_KEEP_EMAIL_PRIVATE = false
 DEFAULT_ALLOW_CREATE_ORGANIZATION = true
 DEFAULT_ENABLE_TIMETRACKING = true
-NO_REPLY_ADDRESS = noreply.localhost
+NO_REPLY_ADDRESS = noreply.{{ hostname }}
 
 [lfs]
 PATH = {{ gitea_work_dir }}/git/lfs

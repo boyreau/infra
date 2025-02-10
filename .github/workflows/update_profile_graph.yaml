@@ -6,6 +6,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
+        name: Setup SSH
+        uses: MrSquaare/ssh-setup-action@v3
+        with:
+          host: gitea
+          port: 2222
+
+      -
         name: Checkout repository
         uses: actions/checkout@v4
 

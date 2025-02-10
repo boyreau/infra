@@ -32,7 +32,7 @@ jobs:
         name: Checkout profile readme
         uses: actions/checkout@v4
         with:
-          repository: github.com/atuuuu/.github
+          repository: atuuuu/.github
 
       -
         name: Update profile graph

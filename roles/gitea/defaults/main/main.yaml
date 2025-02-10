@@ -1,0 +1,5 @@
+internal_token: 
+jwt_secret: 
+lfs_jwt_secret: 
+
+gitea_work_dir: "/var/lib/gitea/"

@@ -9,9 +9,9 @@ RestartSec=2s
 Type=simple
 User=git
 Group=git
-#WorkingDirectory=/var/lib/gitea/
+WorkingDirectory=/var/lib/gitea
 #RuntimeDirectory=gitea
-ExecStart=/snap/bin/gitea web --config /etc/gitea/app.ini
+ExecStart=/usr/bin/gitea web --config /etc/gitea/app.ini
 Restart=always
 
 [Install]

@@ -1,10 +1,10 @@
 APP_NAME = Gitea: Git with a cup of tea
 RUN_USER = git
 RUN_MODE = prod
-WORK_PATH = /var/lib/gitea
+WORK_PATH = {{ gitea_work_dir }}
 
 [repository]
-ROOT = /var/lib/gitea/git/repositories
+ROOT = {{ gitea_work_dir }}/git/repositories
 ENABLE_PUSH_CREATE_USER = true
 
 [repository.local]
@@ -14,7 +14,7 @@ LOCAL_COPY_PATH = /tmp/gitea/local-repo
 TEMP_PATH = /tmp/gitea/uploads
 
 [server]
-APP_DATA_PATH = /var/lib/gitea
+APP_DATA_PATH = {{ gitea_work_dir }}
 SSH_DOMAIN = localhost
 HTTP_PORT = 3001
 ROOT_URL = http://localhost:3001/
@@ -30,7 +30,7 @@ LFS_JWT_SECRET = {{ lfs_jwt_secret }}
 OFFLINE_MODE = true
 
 [database]
-PATH = /var/lib/gitea/data/gitea.db
+PATH = {{ gitea_work_dir }}/data/gitea.db
 DB_TYPE = sqlite3
 HOST = localhost:3306
 NAME = gitea
@@ -41,20 +41,20 @@ SSL_MODE = disable
 LOG_SQL = false
 
 [session]
-PROVIDER_CONFIG = /var/lib/gitea/data/sessions
+PROVIDER_CONFIG = {{ gitea_work_dir }}/data/sessions
 PROVIDER = file
 
 [picture]
-AVATAR_UPLOAD_PATH = /var/lib/gitea/data/avatars
-REPOSITORY_AVATAR_UPLOAD_PATH = /var/lib/gitea/data/repo-avatars
+AVATAR_UPLOAD_PATH = {{ gitea_work_dir }}/data/avatars
+REPOSITORY_AVATAR_UPLOAD_PATH = {{ gitea_work_dir }}/data/repo-avatars
 
 [attachment]
-PATH = /var/lib/gitea/data/attachments
+PATH = {{ gitea_work_dir }}/data/attachments
 
 [log]
-ROOT_PATH = /var/lib/gitea/data/log
+ROOT_PATH = {{ gitea_work_dir }}/data/log
 MODE = console
-LEVEL = info
+LEVEL = fatal
 
 [security]
 INSTALL_LOCK = true
@@ -77,7 +77,7 @@ DEFAULT_ENABLE_TIMETRACKING = true
 NO_REPLY_ADDRESS = noreply.localhost
 
 [lfs]
-PATH = /var/lib/gitea/git/lfs
+PATH = {{ gitea_work_dir }}/git/lfs
 
 [mailer]
 ENABLED = false

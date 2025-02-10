@@ -1,12 +1,7 @@
-- name: "Deploy gitea"
-  community.general.snap:
-    name: gitea
+- name: "Install git"
+  ansible.builtin.apt:
+    name: git
     state: present
-
-- name: "Ensures /etc/gitea exists"
-  file:
-    path: /etc/gitea
-    state: directory
 
 - name: "Create gitea user and group"
   ansible.builtin.user:
@@ -15,6 +10,9 @@
     system: true
     create_home: false
     expires: -1
+
+- name: "Deploy gitea binary and directories"
+  ansible.builtin.script: gitea_install.sh
 
 - name: "Install gitea configuration"
   ansible.builtin.template:

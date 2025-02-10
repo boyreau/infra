@@ -27,14 +27,13 @@ jobs:
             -i inventory.yaml \
             -o /tmp/graph \
             ./playbook.yaml
-          echo ${{ github.actor }}${{ gitea.actor }}
 
       -
         name: Checkout profile readme
         uses: actions/checkout@v4
         with:
           # Don't mind the ugly context abuse please
-          repository: ${{ github.actor }}${{ gitea.actor }}/.github
+          repository: ${{ github.actor }}/.github
 
       -
         name: Update profile graph

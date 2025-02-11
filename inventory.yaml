@@ -1,8 +1,17 @@
-portfolio_local_prod:
+portfolio_local_dev:
   hosts:
     gitea:
-      ansible_host: 35.231.5.181
+      ansible_host: localhost
+      ansible_port: 2223
     action_runner:
-      # ansible_host: 35.185.212.228
+      ansible_host: localhost
+      ansible_port: 2224
     conan:
-      # ansible_host: 127.0.0.1
+      ansible_host: localhost
+      ansible_port: 2225
+
+portfolio_cloud_prod:
+  hosts: # Should be retrieved from cloud hosts through APIs or dedicated ansible roles
+    gitea:
+    action_runner:
+    conan:

@@ -7,3 +7,10 @@
 
   roles:
     - gitea
+
+- name: "Gitea action runner"
+  hosts: gitea
+  become: true
+  become_method: sudo
+  vars_files:
+    - variables.yaml

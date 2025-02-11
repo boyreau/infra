@@ -53,10 +53,8 @@ def run_module():
     # changed is if this module effectively modified the target
     # state will include any data that you want your module to pass back
     # for consumption, for example, in a subsequent task
-    result = dict(
-        ansible_facts=dict(
-            init_process_name='',
-        ),
+    ansible_facts=dict(
+        init_process_name='',
     )
 
     # the AnsibleModule object will be our abstraction working with Ansible
@@ -65,17 +63,17 @@ def run_module():
     # supports check mode
     module = AnsibleModule(
         argument_spec=dict(),
-        supports_check_mode=False
+        supports_check_mode=True
     )
 
     # manipulate or modify the state as needed (this is going to be the
     # part where your module will do what it needs to do)
     p = subprocess.run(["ps","-q","1","-o","comm="], capture_output=True, text=True)
-    result['ansible_facts']['init_process_name'] = p.stdout[:-1] # Trims a newline
+    ansible_facts['init_process_name'] = p.stdout[:-1] # Trims a newline
 
     # in the event of a successful module execution, you will want to
     # simple AnsibleModule.exit_json(), passing the key/value results
-    module.exit_json(**result)
+    module.exit_json(changed=False, ansible_facts=ansible_facts)
 
 
 def main():

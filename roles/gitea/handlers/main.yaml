@@ -1,4 +1,2 @@
 - name: "Restart gitea"
-  ansible.builtin.service:
-    name: gitea
-    state: restarted
+  include_tasks: handlers/{{ ansible_facts['init_process_name'] }}.yaml

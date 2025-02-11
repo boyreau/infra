@@ -1,3 +1,9 @@
+- name: Get init process name
+  hosts: portfolio_local_dev
+  tasks:
+    - name: Get info
+      init_process_facts:
+
 - name: "Gitea personnal instance"
   hosts: gitea
   become: true

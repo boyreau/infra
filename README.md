@@ -17,3 +17,6 @@ architecture-beta
     nginx:R --> L:gitea
     action_runner:B --> T:gitea
 ```
+
+To use this repo, you need to deploy ssh servers (using docker)
+You should then put the path to the private key in the inventory.yaml

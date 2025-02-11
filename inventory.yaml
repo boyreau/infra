@@ -1,14 +1,19 @@
 portfolio_local_dev:
+  vars:
+    ansible_host: localhost
+    ansible_user: admin
+    ansible_ssh_private_key_file: ./ansible_rsa
+
   hosts:
-    gitea:
-      ansible_host: localhost
+    mysql-gitea:
       ansible_port: 2223
-    action_runner:
-      ansible_host: localhost
+    gitea:
       ansible_port: 2224
-    conan:
-      ansible_host: localhost
+    action_runner-gitea:
       ansible_port: 2225
+    nginx-reverse-proxy:
+      ansible_port: 2226
+
 
 portfolio_cloud_prod:
   hosts: # Should be retrieved from cloud hosts through APIs or dedicated ansible roles

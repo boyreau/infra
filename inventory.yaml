@@ -9,7 +9,7 @@ portfolio_local_dev:
       ansible_port: 2223
     gitea:
       ansible_port: 2224
-    action_runner-gitea:
+    act_runner-gitea:
       ansible_port: 2225
     nginx-reverse-proxy:
       ansible_port: 2226
@@ -18,5 +18,5 @@ portfolio_local_dev:
 portfolio_cloud_prod:
   hosts: # Should be retrieved from cloud hosts through APIs or dedicated ansible roles
     gitea:
-    action_runner:
+    act_runner:
     conan:

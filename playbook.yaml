@@ -8,9 +8,13 @@
   roles:
     - gitea
 
+
 - name: "Gitea action runner"
-  hosts: gitea
+  hosts: act_runner-gitea
   become: true
   become_method: sudo
   vars_files:
     - variables.yaml
+
+  # roles:
+  #   - act_runner_gitea

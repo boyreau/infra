@@ -63,7 +63,7 @@ jobs:
           cd profile_repo
           cat template/README.md > README.md
           echo '```mermaid' >> README.md
-          cat graph.mmd >> README.md
+          cat ../graph.mmd >> README.md
           echo '```' >> README.md
 
           git add README.md

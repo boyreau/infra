@@ -8,3 +8,6 @@ gitea_work_dir: "/var/lib/gitea/"
 
 # Hostname used to access your gitea instance
 hostname: "localhost"
+
+# Action runner registration token
+action_runner_token: ""

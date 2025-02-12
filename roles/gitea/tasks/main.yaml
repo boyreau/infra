@@ -1,9 +1,11 @@
 - name: "Install git"
+  tags: install
   ansible.builtin.apt:
     name: git
     state: present
 
 - name: "Create gitea user and group"
+  tags: install
   ansible.builtin.user:
     name: git
     shell: /sbin/nologin
@@ -12,13 +14,15 @@
     expires: -1
 
 - name: "Deploy gitea binary and directories"
+  tags: install
   ansible.builtin.script:
     cmd: gitea_install.sh
     creates: /usr/bin/gitea
   notify:
-    - Restart gitea
+    - restart gitea
 
 - name: "Install gitea configuration"
+  tags: conf
   ansible.builtin.template:
     src: app.ini.j2
     dest: /etc/gitea/app.ini
@@ -26,9 +30,10 @@
     group: git
     mode: '0600'
   notify:
-    - Restart gitea
+    - restart gitea
 
 - name: "Set up gitea service"
+  tags: conf
   ansible.builtin.copy:
     src: gitea.service
     dest: /etc/systemd/system/gitea.service
@@ -36,33 +41,4 @@
     group: root
     mode: '0600'
   notify:
-    - Restart gitea
-
-- name: Generate an action runner token
-  tags: token
-  ansible.builtin.command:
-    cmd: "su -s /bin/sh git -c '/usr/bin/gitea --config /etc/gitea/app.ini actions generate-runner-token | tee /etc/gitea/runner_token'"
-    creates: /etc/gitea/runner_token
-  register: token
-
-- name: Retrieve a previously generated action runner token
-  tags: token
-  ansible.builtin.command:
-    cmd: "cat /etc/gitea/runner_token"
-    removes: /etc/gitea/runner_token # Does not actually removes the file
-  register: token
-  when: token.stdout is search("skipped")
-  changed_when: false
-
-- name: Store the token as a fact
-  tags: token
-  ansible.builtin.set_fact:
-    cacheable: true
-    ACTION_RUNNER_TOKEN: "{{ token.stdout }}"
-
-- name: Show the facts
-  tags: token
-  ansible.builtin.debug:
-    verbosity: 3
-    var: ansible_facts["ACTION_RUNNER_TOKEN"]
-
+    - restart gitea

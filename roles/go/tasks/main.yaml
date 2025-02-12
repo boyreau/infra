@@ -1,0 +1,22 @@
+- name: download go
+  ansible.builtin.command:
+    creates: /tmp/go1.24.0.linux-amd64.tar.gz
+    cmd: "wget -O /tmp/{{ go_package }} https://go.dev/dl/{{ go_package }}"
+
+- name: extract go
+  ansible.builtin.command:
+    creates: /usr/local/go
+    cmd: "tar -C /usr/local -xzf /tmp/{{ go_package }}"
+
+- name: check go existence
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/go/bin"
+  shell:
+    cmd: "go version"
+  register: go_version
+  changed_when: false
+
+- name: ensure go is installed
+  ansible.builtin.assert:
+    that: "'command not found' not in go_version.stderr" 
+

@@ -1,0 +1,5 @@
+# Action runner registration token
+action_runner_token: ""
+
+# Gitea server used for registration
+gitea_host: "localhost"

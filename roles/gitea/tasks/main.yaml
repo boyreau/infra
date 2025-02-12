@@ -12,7 +12,9 @@
     expires: -1
 
 - name: "Deploy gitea binary and directories"
-  ansible.builtin.script: gitea_install.sh
+  ansible.builtin.script:
+    cmd: gitea_install.sh
+    creates: /usr/bin/gitea
   notify:
     - Restart gitea
 

@@ -18,13 +18,32 @@ jobs:
           path: ./profile_repo
           token: ${{ secrets.GIT_TOKEN }}
 
+      
+      - name: Restore cached venv and git configuration
+        id: cache-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ./venv
+            ~/.gitconfig
+          key: ${{ runner.os }}-ansible-graph-cache
+
       -
         name: Install dependencies
+        if: steps.cache-restore.outputs.cache-hit != 'true'
         run: |
           python3 -m venv venv
           source venv/bin/activate
           pip install ansible
           pip install ansible-playbook-grapher
+
+      -
+        name: Configure git
+        if: steps.cache-restore.outputs.cache-hit != 'true'
+        run: |
+          git config --global user.email "action@git.ea.hub"
+          git config --global user.name "Action"
+          git config --global credential.helper '!f() { sleep 1; echo "username=${{ github.actor }} token=${{ secrets.GIT_TOKEN }}"; }; f'
       
       -
         name: Generate graph
@@ -41,17 +60,21 @@ jobs:
       -
         name: Update profile graph
         run: |
-          cat profile_repo/template/README.md > profile_repo/README.md
-          echo '```mermaid' >> profile_repo/README.md
-          cat graph.mmd >> profile_repo/README.md
-          echo '```' >> profile_repo/README.md
           cd profile_repo
-
-          git config --global user.email "action@git.ea.hub"
-          git config --global user.name "Action"
-          git config --global credential.helper '!f() { sleep 1; echo "username=${{ github.actor }} token=${{ secrets.GIT_TOKEN }}"; }; f'
+          cat template/README.md > README.md
+          echo '```mermaid' >> README.md
+          cat graph.mmd >> README.md
+          echo '```' >> README.md
 
           git add README.md
           git commit -m 'profile graph automatic update'
           git push
 
+      - name: Save venv and git configuration
+        id: cache-save
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ./venv
+            ~/.gitconfig
+          key: ${{ steps.cache-restore.outputs.cache-primary-key }}

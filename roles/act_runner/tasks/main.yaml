@@ -65,7 +65,7 @@
     ansible.builtin.shell:
       chdir: /sources/act_runner
       creates: /etc/act_runner/config.yaml
-      cmd: ./act_runner genereate-config > /etc/act_runner/config.yaml
+      cmd: ./act_runner generate-config > /etc/act_runner/config.yaml
   
   - name: register act runner to gitea server
     ansible.builtin.shell:

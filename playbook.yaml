@@ -19,7 +19,6 @@
   become: true
   become_method: sudo
   vars:
-    action_runner_token: ""
     gitea_host: containers-gitea-1
     go_package: go1.24.0.linux-amd64.tar.gz
   vars_files:

@@ -9,7 +9,7 @@
   become: true
   become_method: sudo
   vars_files:
-    - variables.yaml
+    - variables/dev.yaml
   roles:
     - gitea
 
@@ -23,7 +23,9 @@
     gitea_host: containers-gitea-1
     go_package: go1.24.0.linux-amd64.tar.gz
   vars_files:
-    - variables.yaml
+    - variables/dev.yaml
   roles:
     - go
-    - act_runner
+    - role: act_runner
+      vars:
+        action_runner_token: "{{ hostvars['gitea'].action_runner_token }}"

@@ -8,67 +8,67 @@
     state: present
 
 # Act_runner build steps
-- name: find latest act_runner version
+- name: download act_runner
   tags: download
-  ansible.builtin.uri:
-    url: https://gitea.com/api/v1/repos/gitea/act_runner/tags?page=1&limit=1
-    return_content: true
-  register: json_response
+  block:
+  - name: find latest act_runner version
+    ansible.builtin.uri:
+      url: https://gitea.com/api/v1/repos/gitea/act_runner/tags?page=1&limit=1
+      return_content: true
+    register: json_response
+  
+  - name: debug json_response
+    ansible.builtin.debug:
+      verbosity: 0
+      var: json_response
+  
+  - name: download latest act_runner version
+    ansible.builtin.get_url:
+      url: "{{ json_response.json[0].tarball_url }}"
+      dest: ./act_runner-latest.tar.gz
+  
+  - name: create sources directory
+    ansible.builtin.file:
+      path: /sources
+      state: directory
 
-- name: debug json_response
-  tags: download
-  ansible.builtin.debug:
-    verbosity: 0
-    var: json_response
-
-- name: download latest act_runner version
-  tags: download
-  ansible.builtin.get_url:
-    url: "{{ json_response.json[0].tarball_url }}"
-    dest: ./act_runner-latest.tar.gz
-
-- name: extract act_runner archive
+- name: unpack and build act_runner
   tags: build
-  ansible.builtin.unarchive:
-    src: ./act_runner-latest.tar.gz
-    dest: /sources
-    remote_src: yes
-
-
-- name: build act_runner
-  tags: build
-  environment:
-    PATH: "{{ ansible_env.PATH }}:/usr/local/go/bin"
-  community.general.make:
-    chdir: /sources
-    target: build
-  register: make_out
-  changed_when: make_out.stdout != "" and make_out.stderr != ""
+  block:
+  - name: extract act_runner archive
+    tags: build
+    ansible.builtin.unarchive:
+      src: ./act_runner-latest.tar.gz
+      dest: /sources
+      remote_src: yes
+  
+  - name: build act_runner
+    tags: build
+    environment:
+      PATH: "{{ ansible_env.PATH }}:/usr/local/go/bin"
+    community.general.make:
+      chdir: /sources/act_runner
+      target: build
+    register: make_out
+    changed_when: make_out.stdout != "" and make_out.stderr != ""
 
 # Act runner configuration
-- name: create act_runner directory layout
+- name: configure act_runner
   tags: conf
-  ansible.builtin.shell:
-    creates: /etc/act_runner
-    cmd: mkdir -p /etc/act_runner
-
-- name: generate act_runner config
-  tags: conf
-  ansible.builtin.shell:
-    chdir: /sources
-    creates: /etc/act_runner/config.yaml
-    cmd: ./act_runner genereate-config > /etc/act_runner/config.yaml
-
-- name: register act runner to gitea server
-  tags: conf
-  ansible.builtin.shell:
-    chdir: /sources
-    cmd: "./act_runner --config /etc/act_runner/config.yaml register --no-interactive --instance {{ gitea_host }} --token {{ action_runner_token }}"
-  register: registration_out
-
-- name: display registration output
-  tags:
-    - conf
-    - debug
-  ansible.builtin.debug:
-    var: registration_out
+  block:
+  - name: create act_runner directory layout
+    ansible.builtin.shell:
+      creates: /etc/act_runner
+      cmd: mkdir -p /etc/act_runner
+  
+  - name: generate act_runner config
+    ansible.builtin.shell:
+      chdir: /sources/act_runner
+      creates: /etc/act_runner/config.yaml
+      cmd: ./act_runner genereate-config > /etc/act_runner/config.yaml
+  
+  - name: register act runner to gitea server
+    ansible.builtin.shell:
+      chdir: /sources/act_runner
+      cmd: "./act_runner --config /etc/act_runner/config.yaml register --no-interactive --instance {{ gitea_host }} --token {{ action_runner_token }}"
+    register: registration_out

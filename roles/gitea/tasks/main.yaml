@@ -37,3 +37,32 @@
     mode: '0600'
   notify:
     - Restart gitea
+
+- name: Generate an action runner token
+  tags: token
+  ansible.builtin.command:
+    cmd: "su -s /bin/sh git -c '/usr/bin/gitea --config /etc/gitea/app.ini actions generate-runner-token | tee /etc/gitea/runner_token'"
+    creates: /etc/gitea/runner_token
+  register: token
+
+- name: Retrieve a previously generated action runner token
+  tags: token
+  ansible.builtin.command:
+    cmd: "cat /etc/gitea/runner_token"
+    removes: /etc/gitea/runner_token # Does not actually removes the file
+  register: token
+  when: token.stdout is search("skipped")
+  changed_when: false
+
+- name: Store the token as a fact
+  tags: token
+  ansible.builtin.set_fact:
+    cacheable: true
+    ACTION_RUNNER_TOKEN: "{{ token.stdout }}"
+
+- name: Show the facts
+  tags: token
+  ansible.builtin.debug:
+    verbosity: 3
+    var: ansible_facts["ACTION_RUNNER_TOKEN"]
+

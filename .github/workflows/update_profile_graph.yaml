@@ -36,6 +36,7 @@ jobs:
           source venv/bin/activate
           pip install ansible
           pip install ansible-playbook-grapher
+          ansible-galaxy install -r requirements.yaml
 
       -
         name: Configure git

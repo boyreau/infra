@@ -1,0 +1,28 @@
+- name: restart gitea
+  ansible.builtin.include_tasks:
+    file: "{{ item }}"
+  with_first_found:
+    - "handlers/{{ ansible_facts['init_process_name'] }}.yaml"
+    - "handlers/default.yaml"
+ 
+
+- name: generate action runner token
+  tags:
+    - conf
+    - actions
+  block:
+    - name: generate action runner token
+      ansible.builtin.shell:
+        creates: /etc/gitea/action_token
+        cmd: "su -s /bin/sh git -c '/usr/bin/gitea --config /etc/gitea/app.ini actions generate-runner-token' > /etc/gitea/action_token"
+
+    - name: retrieve action runner token
+      ansible.builtin.shell:
+        cmd: "cat /etc/gitea/action_token"
+      changed_when: false
+      register: token
+      failed_when: token.stdout is search("Error")
+
+    - name: export action runner token
+      ansible.builtin.set_fact:
+        action_runner_token: "{{ token.stdout }}"

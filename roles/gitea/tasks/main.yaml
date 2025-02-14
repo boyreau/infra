@@ -18,8 +18,6 @@
     ansible.builtin.script:
       cmd: gitea_install.sh
       creates: /usr/bin/gitea
-    notify:
-      - restart gitea
 
 - name: configure gitea
   tags: conf
@@ -31,8 +29,6 @@
       owner: git
       group: git
       mode: '0600'
-    notify:
-      - restart gitea
   
   - name: set up gitea service
     ansible.builtin.copy:
@@ -41,8 +37,13 @@
       owner: root
       group: root
       mode: '0600'
-    notify:
-      - restart gitea
+  
+  - name: restart gitea
+    ansible.builtin.include_tasks:
+      file: "{{ item }}"
+    with_first_found:
+      - "restart/{{ ansible_facts['init_process_name'] }}.yaml"
+      - "restart/default.yaml"
 
 - name: configure action runner token
   tags:
@@ -52,7 +53,7 @@
     - name: generate action runner token
       ansible.builtin.shell:
         creates: /etc/gitea/action_token
-        cmd: "su git -s /bin/sh -c '/usr/bin/gitea --config /etc/gitea/app.ini actions generate-runner-token' > /etc/gitea/action_token"
+        cmd: "su -s /bin/sh git -c '/usr/bin/gitea --config /etc/gitea/app.ini actions generate-runner-token' > /etc/gitea/action_token"
 
     - name: retrieve action runner token
       ansible.builtin.shell:
@@ -61,5 +62,8 @@
       register: token
 
     - name: export action runner token
+      tags:
+        - conf
+        - action
       ansible.builtin.set_fact:
         action_runner_token: "{{ token.stdout }}"

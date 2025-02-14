@@ -1,0 +1,7 @@
+dependencies:
+  - role: go
+  - role: geerlingguy.docker
+    vars:
+      docker_users:
+        - git
+      docker_service_manage: false

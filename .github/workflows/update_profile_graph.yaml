@@ -31,7 +31,6 @@ jobs:
 
       -
         name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           python3 -m venv venv
           source venv/bin/activate

@@ -26,5 +26,6 @@
     - go
     - role: act_runner
       vars:
-        gitea_host: http://containers-gitea-1:3000/
+        gitea_host: containers-gitea-1:3000
         action_runner_token: "{{ hostvars['gitea'].action_runner_token }}"
+

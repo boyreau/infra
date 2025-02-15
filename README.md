@@ -18,5 +18,23 @@ architecture-beta
     action_runner:B --> T:gitea
 ```
 
-To use this repo, you need to deploy ssh servers (using docker)
+### My final pipeline should look like this
+
+```mermaid
+---
+title: My C devops pipeline
+---
+flowchart LR
+    Develop[Vim,  Git]
+    Build[Gitea/Github/Gitlab Actions, LLVM Toolchain, GNU Make]
+    Test[LLVM Toolchain, GNU Make]
+    Deploy[Ansible, Docker]
+    Monitor[Prometheus, Grafana]
+
+    Develop --> Build --> Test --> Deploy --> Monitor
+```
+
+
+To use this repo, you need to deploy the ssh servers provided in the directory *containers* (using docker)
 You should then put the path to the private key in the inventory.yaml
+

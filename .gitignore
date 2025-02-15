@@ -2,3 +2,4 @@ venv
 variables.yaml
 containers/
 ansible_rsa
+library/__pycache__/

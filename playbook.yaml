@@ -4,20 +4,20 @@
     - name: Get init process name
       init_process_facts:
 
-- name: "Gitea personnal instance"
+- name: Gitea personnal instance
   hosts: gitea
   become: true
-  become_method: sudo
+  become_method: ansible.builtin.sudo
   vars_files:
     - variables/dev.yaml
   roles:
     - gitea
 
 
-- name: "Gitea action runner"
+- name: Gitea action runner
   hosts: act_runner-gitea
   become: true
-  become_method: sudo
+  become_method: ansible.builtin.sudo
   vars:
     go_package: go1.24.0.linux-amd64.tar.gz
   vars_files:
@@ -26,6 +26,5 @@
     - go
     - role: act_runner
       vars:
-        gitea_host: http://containers-gitea-1:3000/
-        action_runner_token: "{{ hostvars['gitea'].action_runner_token }}"
-
+        act_runner_gitea_host: http://containers-gitea-1:3000/
+        act_runner_token: "{{ hostvars['gitea'].action_runner_token }}"

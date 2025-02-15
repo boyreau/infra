@@ -1,68 +1,68 @@
-- name: install git and gitea
+- name: Install git and gitea
   tags: install
   block:
-  - name: install git
-    ansible.builtin.apt:
-      name: git
-      state: present
-  
-  - name: create gitea user and group
-    ansible.builtin.user:
-      name: git
-      shell: /sbin/nologin
-      system: true
-      create_home: false
-      expires: -1
+    - name: Install git
+      ansible.builtin.apt:
+        name: Git
+        state: present
 
-  - name: download gitea binary
-    ansible.builtin.get_url:
-      dest: /usr/bin/gitea
-      owner: root
-      mode: '0755'
-      url: "https://dl.gitea.com/gitea/{{ gitea_version }}/gitea-{{ gitea_version }}-{{ gitea_arch }}"
-  
-  - name: deploy gitea directories
-    ansible.builtin.file:
-      path: "{{ item.path }}"
-      mode: "{{ item.mode }}"
-      owner: "{{ item.owner }}"
-      group: "{{ item.group }}"
-      state: directory
-      recurse: false
-    loop:
-      - { path: /var/lib/gitea, mode: '0750', owner: git, group: git }
-      - { path: /var/lib/gitea/custom, mode: '0750', owner: git, group: git }
-      - { path: /var/lib/gitea/data, mode: '0750', owner: git, group: git }
-      - { path: /var/lib/gitea/log, mode: '0750', owner: git, group: git }
-      - { path: /etc/gitea, mode: '0770', owner: root, group: git }
+    - name: Create gitea user and group
+      ansible.builtin.user:
+        name: Git
+        shell: /sbin/nologin
+        system: true
+        create_home: false
+        expires: -1
 
-- name: configure gitea
+    - name: Download gitea binary
+      ansible.builtin.get_url:
+        dest: /usr/bin/gitea
+        owner: root
+        mode: '0755'
+        url: "https://dl.gitea.com/gitea/{{ gitea_version }}/gitea-{{ gitea_version }}-{{ gitea_arch }}"
+
+    - name: Deploy gitea directories
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        mode: "{{ item.mode }}"
+        owner: "{{ item.owner }}"
+        group: "{{ item.group }}"
+        state: directory
+        recurse: false
+      loop:
+        - { path: /var/lib/gitea, mode: '0750', owner: git, group: git }
+        - { path: /var/lib/gitea/custom, mode: '0750', owner: git, group: git }
+        - { path: /var/lib/gitea/data, mode: '0750', owner: git, group: git }
+        - { path: /var/lib/gitea/log, mode: '0750', owner: git, group: git }
+        - { path: /etc/gitea, mode: '0770', owner: root, group: git }
+
+- name: Configure gitea
   tags: conf
-  block:
-  - name: install gitea configuration
-    ansible.builtin.template:
-      src: app.ini.j2
-      dest: /etc/gitea/app.ini
-      owner: git
-      group: git
-      mode: '0600'
-  
-  - name: set up gitea service
-    ansible.builtin.copy:
-      src: gitea.service
-      dest: /etc/systemd/system/gitea.service
-      owner: root
-      group: root
-      mode: '0600'
-    when: ansible_facts.init_process_name == "systemd"
   notify: restart gitea
+  block:
+    - name: Install gitea configuration
+      ansible.builtin.template:
+        src: app.ini.j2
+        dest: /etc/gitea/app.ini
+        owner: git
+        group: git
+        mode: '0600'
 
-- name: configure action runner token
+    - name: Set up gitea service
+      ansible.builtin.copy:
+        src: gitea.service
+        dest: /etc/systemd/system/gitea.service
+        owner: root
+        group: root
+        mode: '0600'
+      when: ansible_facts.init_process_name == "systemd"
+
+- name: Configure action runner token
   tags:
     - conf
     - actions
   block:
-    - name: retrieve action runner token
+    - name: Retrieve action runner token
       ansible.builtin.slurp:
         src: /etc/gitea/action_token
       register: token
@@ -75,18 +75,18 @@
         - "restart/{{ ansible_facts['init_process_name'] }}.yaml"
         - "restart/default.yaml"
 
-    - name: wait for gitea server to be online
+    - name: Wait for gitea server to be online
       ansible.builtin.uri:
         url: http://localhost:3000/
       retries: 10
       delay: 10
 
-    - name: generate action runner token
+    - name: Generate action runner token
       ansible.builtin.shell:
         creates: /etc/gitea/action_token
         cmd: "su -s /bin/sh git -c '/usr/bin/gitea --config /etc/gitea/app.ini actions generate-runner-token' > /etc/gitea/action_token"
 
-    - name: retrieve action runner token
+    - name: Retrieve action runner token
       ansible.builtin.slurp:
         src: /etc/gitea/action_token
       register: token

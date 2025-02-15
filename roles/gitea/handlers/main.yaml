@@ -1,4 +1,4 @@
-- name: restart gitea
+- name: Restart gitea
   ansible.builtin.include_tasks:
     file: "{{ item }}"
   with_first_found:

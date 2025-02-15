@@ -46,7 +46,7 @@ jobs:
           git config --global user.email "action@git.ea.hub"
           git config --global user.name "Action"
           git config --global credential.helper '!f() { sleep 1; echo "username=${{ github.actor }} token=${{ secrets.GIT_TOKEN }}"; }; f'
-      
+
       -
         name: Generate graph
         run: |
@@ -58,7 +58,7 @@ jobs:
             -i ./inventory.yaml \
             -o ./graph \
             ./playbook.yaml
-      
+
       -
         name: Update profile graph
         run: |

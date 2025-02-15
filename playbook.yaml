@@ -13,7 +13,6 @@
   roles:
     - gitea
 
-
 - name: Gitea action runner
   hosts: act_runner-gitea
   become: true
@@ -27,4 +26,4 @@
     - role: act_runner
       vars:
         act_runner_gitea_host: http://containers-gitea-1:3000/
-        act_runner_token: "{{ hostvars['gitea'].action_runner_token }}"
+        act_runner_registration_token: "{{ hostvars['gitea'].act_runner_token.content | b64decode }}"

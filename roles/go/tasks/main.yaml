@@ -9,8 +9,9 @@
 - name: Extract go
   ansible.builtin.unarchive:
     creates: /usr/local/go
-    dest: /usr/local/go
-    src: "/tmp/{{ go_package }}"
+    src: "/tmp/{{ go_package }}.tar.gz"
+    remote_src: true
+    dest: /usr/local
     owner: root
     group: root
     mode: '0700'

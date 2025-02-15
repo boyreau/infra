@@ -93,12 +93,12 @@
         creates: /var/lib/act_runner/.runner
         chdir: /var/lib/act_runner
         cmd: >
-          /sources/act_runner/act_runner
-            --config /etc/act_runner/config.yaml
-            register
-              --no-interactive
-              --instance {{ gitea_host }}
-              --token {{ action_runner_token }}"
+          /sources/act_runner/act_runner \
+            --config /etc/act_runner/config.yaml \
+            register \
+              --no-interactive \
+              --instance {{ act_runner_gitea_host }} \
+              --token {{ act_runner_registration_token }}
       register: registration_out
 
 - name: Start act_runner

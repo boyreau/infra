@@ -1,0 +1,4 @@
+- name: Retrieve action runner token
+  ansible.builtin.slurp:
+    src: /etc/gitea/action_token
+  register: act_runner_token

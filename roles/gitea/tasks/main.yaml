@@ -3,12 +3,12 @@
   block:
     - name: Install git
       ansible.builtin.apt:
-        name: Git
+        name: git
         state: present
 
     - name: Create gitea user and group
       ansible.builtin.user:
-        name: Git
+        name: git
         shell: /sbin/nologin
         system: true
         create_home: false
@@ -38,10 +38,11 @@
 
 - name: Configure gitea
   tags: conf
-  notify: restart gitea
+  notify: Restart gitea
   block:
     - name: Install gitea configuration
       ansible.builtin.template:
+        force: false
         src: app.ini.j2
         dest: /etc/gitea/app.ini
         owner: git
@@ -63,9 +64,7 @@
     - actions
   block:
     - name: Retrieve action runner token
-      ansible.builtin.slurp:
-        src: /etc/gitea/action_token
-      register: token
+      ansible.builtin.import_tasks: retrieve_act_runner_token.yaml
 
   rescue:
     - name: (re)start gitea
@@ -87,6 +86,4 @@
         cmd: "su -s /bin/sh git -c '/usr/bin/gitea --config /etc/gitea/app.ini actions generate-runner-token' > /etc/gitea/action_token"
 
     - name: Retrieve action runner token
-      ansible.builtin.slurp:
-        src: /etc/gitea/action_token
-      register: token
+      ansible.builtin.import_tasks: retrieve_act_runner_token.yaml

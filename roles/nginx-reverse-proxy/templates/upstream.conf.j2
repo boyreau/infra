@@ -1,0 +1,14 @@
+upstream {{ item.name }} {
+	server {{ item.upstream }};
+}
+
+server {
+    listen       {{ item.port }};
+    server_name  {{ item.host }};
+
+    #access_log  /var/log/nginx/host.access.log  main;
+
+    location / {
+        proxy_pass http://{{ item.name }};
+    }
+}

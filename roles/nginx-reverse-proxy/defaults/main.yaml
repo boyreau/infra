@@ -1,0 +1,3 @@
+# Upstream proxied for
+nginx_upstreams:
+  - { name: default, host: localhost, port: 80, upstream: localhost:3000 }

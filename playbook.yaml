@@ -27,3 +27,13 @@
       vars:
         act_runner_gitea_host: http://containers-gitea-1:3000/
         act_runner_registration_token: "{{ hostvars['gitea'].act_runner_token.content | b64decode }}"
+
+- name: Nginx reverse proxy
+  hosts: nginx-reverse-proxy
+  become: true
+  become_method: ansible.builtin.sudo
+  roles:
+    - role: nginx-reverse-proxy
+      vars:
+        nginx_upstreams:
+          - { name: gitea, host: localhost, port: 80, upstream: containers-gitea-1:3000 }

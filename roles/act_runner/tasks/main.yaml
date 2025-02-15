@@ -1,3 +1,9 @@
+- name: start dockerd
+  ansible.builtin.shell:
+    creates: /run/docker.pid
+    cmd: dockerd --iptables=false --bridge=none &
+  when: ansible_facts.init_process_name != "systemd"
+
 # Basic compilation tools installation
 - name: install git and make
   tags: build
@@ -58,8 +64,11 @@
   block:
   - name: create act_runner directory layout
     ansible.builtin.shell:
-      creates: /etc/act_runner
-      cmd: mkdir -p /etc/act_runner
+      creates: "{{ item }}"
+      cmd: "mkdir -p {{ item }}"
+    loop:
+      - /etc/act_runner
+      - /var/lib/act_runner
   
   - name: generate act_runner config
     ansible.builtin.shell:
@@ -69,6 +78,13 @@
   
   - name: register act runner to gitea server
     ansible.builtin.shell:
-      chdir: /sources/act_runner
-      cmd: "./act_runner --config /etc/act_runner/config.yaml register --no-interactive --instance {{ gitea_host }} --token {{ action_runner_token }}"
+      creates: /var/lib/act_runner/.runner
+      chdir: /var/lib/act_runner
+      cmd: "/sources/act_runner/act_runner --config /etc/act_runner/config.yaml register --no-interactive --instance {{ gitea_host }} --token {{ action_runner_token }}"
     register: registration_out
+
+- name: start act_runner
+  ansible.builtin.shell:
+    chdir: /var/lib/act_runner
+    cmd: /sources/act_runner/act_runner --config /etc/act_runner/config.yaml daemon &
+

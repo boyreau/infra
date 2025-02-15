@@ -1,7 +1,7 @@
 - name: install git and gitea
   tags: install
   block:
-  - name: "Install git"
+  - name: install git
     ansible.builtin.apt:
       name: git
       state: present
@@ -13,11 +13,28 @@
       system: true
       create_home: false
       expires: -1
+
+  - name: download gitea binary
+    ansible.builtin.get_url:
+      dest: /usr/bin/gitea
+      owner: root
+      mode: '0755'
+      url: "https://dl.gitea.com/gitea/{{ gitea_version }}/gitea-{{ gitea_version }}-{{ gitea_arch }}"
   
-  - name: deploy gitea binary and directories
-    ansible.builtin.script:
-      cmd: gitea_install.sh
-      creates: /usr/bin/gitea
+  - name: deploy gitea directories
+    ansible.builtin.file:
+      path: "{{ item.path }}"
+      mode: "{{ item.mode }}"
+      owner: "{{ item.owner }}"
+      group: "{{ item.group }}"
+      state: directory
+      recurse: false
+    loop:
+      - { path: /var/lib/gitea, mode: '0750', owner: git, group: git }
+      - { path: /var/lib/gitea/custom, mode: '0750', owner: git, group: git }
+      - { path: /var/lib/gitea/data, mode: '0750', owner: git, group: git }
+      - { path: /var/lib/gitea/log, mode: '0750', owner: git, group: git }
+      - { path: /etc/gitea, mode: '0770', owner: root, group: git }
 
 - name: configure gitea
   tags: conf
@@ -37,33 +54,39 @@
       owner: root
       group: root
       mode: '0600'
-  
-  - name: restart gitea
-    ansible.builtin.include_tasks:
-      file: "{{ item }}"
-    with_first_found:
-      - "restart/{{ ansible_facts['init_process_name'] }}.yaml"
-      - "restart/default.yaml"
+    when: ansible_facts.init_process_name == "systemd"
+  notify: restart gitea
 
 - name: configure action runner token
   tags:
     - conf
     - actions
   block:
+    - name: retrieve action runner token
+      ansible.builtin.slurp:
+        src: /etc/gitea/action_token
+      register: token
+
+  rescue:
+    - name: (re)start gitea
+      ansible.builtin.include_tasks:
+        file: "{{ item }}"
+      with_first_found:
+        - "restart/{{ ansible_facts['init_process_name'] }}.yaml"
+        - "restart/default.yaml"
+
+    - name: wait for gitea server to be online
+      ansible.builtin.uri:
+        url: http://localhost:3000/
+      retries: 10
+      delay: 10
+
     - name: generate action runner token
       ansible.builtin.shell:
         creates: /etc/gitea/action_token
         cmd: "su -s /bin/sh git -c '/usr/bin/gitea --config /etc/gitea/app.ini actions generate-runner-token' > /etc/gitea/action_token"
 
     - name: retrieve action runner token
-      ansible.builtin.shell:
-        cmd: "cat /etc/gitea/action_token"
-      changed_when: false
+      ansible.builtin.slurp:
+        src: /etc/gitea/action_token
       register: token
-
-    - name: export action runner token
-      tags:
-        - conf
-        - action
-      ansible.builtin.set_fact:
-        action_runner_token: "{{ token.stdout }}"

@@ -1,0 +1,6 @@
+- name: Restart nginx
+  ansible.builtin.include_tasks:
+    file: "{{ item }}"
+  with_first_found:
+    - "tasks/restart/{{ ansible_facts['init_process_name'] }}.yaml"
+    - "tasks/restart/default.yaml"

@@ -1,3 +1,9 @@
-# Upstream proxied for
+# Upstream proxied for.
+# DO NOT NAME AN UPSTREAM DEFAULT
+# IT WILL BE REMOVED AND RE-APPLIED AT EVERY RUN
+# LEADING TO A USELESS NGINX RESTART
 nginx_upstreams:
-  - { name: default, host: localhost, port: 80, upstream: localhost:3000 }
+  - name: example
+    host: localhost
+    port: 80
+    upstream: localhost:3000

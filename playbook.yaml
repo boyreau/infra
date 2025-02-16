@@ -12,7 +12,7 @@
   vars_files:
     - variables.yaml
   roles:
-    - role: geerilingguy.mysql
+    - role: geerlingguy.mysql
       vars:
         mysql_enabled_on_startup: true
         mysql_databases:

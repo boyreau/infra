@@ -1,0 +1,9 @@
+gitea_db_name: gitea
+gitea_db_user: gitea
+gitea_db_password: 12345
+gitea_port: 3000
+gitea_hostname: containers-gitea-1
+
+internal_token: 
+jwt_secret: 
+lfs_jwt_secret: 

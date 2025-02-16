@@ -9,6 +9,8 @@
   hosts: mysql-gitea
   become: true
   become_method: ansible.builtin.sudo
+  vars_files:
+    - variables.yaml
   tasks:
     - name: Deploy mysql role
       ansible.builtin.import_role:
@@ -30,7 +32,7 @@
   become: true
   become_method: ansible.builtin.sudo
   vars_files:
-    - variables/dev.yaml
+    - variables.yaml
   roles:
     - gitea
 
@@ -42,7 +44,7 @@
   vars:
     go_package: go1.24.0.linux-amd64.tar.gz
   vars_files:
-    - variables/dev.yaml
+    - variables.yaml
   roles:
     - go
     - role: act_runner
@@ -55,8 +57,10 @@
   hosts: nginx-reverse-proxy
   become: true
   become_method: ansible.builtin.sudo
+  vars_files:
+    - variables.yaml
   roles:
     - role: nginx-reverse-proxy
       vars:
         nginx_upstreams:
-          - { name: gitea, host: localhost, port: 80, upstream: containers-gitea-1:3000 }
+          - { name: gitea, host: gitea.zozo.com, port: 80, upstream: "{{ gitea_hostname }}:{{ gitea_port }}" }

@@ -11,10 +11,8 @@
   become_method: ansible.builtin.sudo
   vars_files:
     - variables.yaml
-  tasks:
-    - name: Deploy mysql role
-      ansible.builtin.import_role:
-        role: geerlingguy.mysql
+  roles:
+    - role: geerilingguy.mysql
       vars:
         mysql_enabled_on_startup: true
         mysql_databases:

@@ -4,7 +4,28 @@
     - name: Get init process name
       init_process_facts:
 
-- name: Gitea personnal instance
+
+- name: Mysql gitea database
+  hosts: mysql-gitea
+  become: true
+  become_method: ansible.builtin.sudo
+  tasks:
+    - name: Deploy mysql role
+      ansible.builtin.import_role:
+        role: geerlingguy.mysql
+      vars:
+        mysql_enabled_on_startup: true
+        mysql_databases:
+          - name: "{{ gitea_db_name }}"
+        mysql_users:
+          - name: "{{ gitea_db_user }}"
+            host: "{{ gitea_hostname }}"
+            password: "{{ gitea_db_password }}"
+            encrypted: no
+            priv: "{{ gitea_db_name }}.*:ALL"
+            state: present
+
+- name: Gitea instance
   hosts: gitea
   become: true
   become_method: ansible.builtin.sudo
@@ -12,6 +33,7 @@
     - variables/dev.yaml
   roles:
     - gitea
+
 
 - name: Gitea action runner
   hosts: act_runner-gitea
@@ -27,6 +49,7 @@
       vars:
         act_runner_gitea_host: http://containers-gitea-1:3000/
         act_runner_registration_token: "{{ hostvars['gitea'].act_runner_token.content | b64decode }}"
+
 
 - name: Nginx reverse proxy
   hosts: nginx-reverse-proxy

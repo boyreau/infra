@@ -1,9 +1,0 @@
-- name: Stop gitea
-  ansible.builtin.shell:
-    cmd: "kill $(cat /run/gitea.pid) && rm -f /run/gitea.pid"
-    removes: /run/gitea.pid
-
-- name: Start gitea
-  ansible.builtin.shell:
-    cmd: "su -s /bin/sh git -c '/usr/bin/gitea web --config /etc/gitea/app.ini' &"
-    creates: /run/gitea.pid

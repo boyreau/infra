@@ -1,6 +1,6 @@
 - name: Include nginx role
   tags: conf
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     role: nginxinc.nginx
   vars:
     nginx_start: false
@@ -27,3 +27,4 @@
   tags: start
   ansible.builtin.shell:
     cmd: nginx -g 'daemon on; master_process on;'
+  when: ansible_facts['init_process_name'] != 'systemd'

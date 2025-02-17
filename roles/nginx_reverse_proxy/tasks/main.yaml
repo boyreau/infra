@@ -1,3 +1,4 @@
+---
 - name: Include nginx role
   tags: conf
   ansible.builtin.import_role:
@@ -19,7 +20,7 @@
     dest: "/etc/nginx/conf.d/{{ item.name }}.conf"
     owner: root
     group: root
-    mode: '0600'
-  loop: "{{ nginx_upstreams }}"
+    mode: "0600"
+  loop: "{{ nginx_reverse_proxy_upstreams }}"
   loop_control:
     label: "{{ item.name }}"

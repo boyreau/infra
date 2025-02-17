@@ -1,9 +1,11 @@
+---
 - name: Stop nginx
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: nginx -s quit
-    removes: /run/gitea.pid
+    removes: /run/nginx.pid
 
 - name: Start nginx
   tags: start
   ansible.builtin.shell:
     cmd: nginx -g 'daemon on; master_process on;'
+    creates: /run/nginx.pid

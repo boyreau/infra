@@ -1,8 +1,9 @@
+---
 # Upstream proxied for.
 # DO NOT NAME AN UPSTREAM DEFAULT
 # IT WILL BE REMOVED AND RE-APPLIED AT EVERY RUN
 # LEADING TO A USELESS NGINX RESTART
-nginx_upstreams:
+nginx_reverse_proxy_upstreams:
   - name: example
     host: localhost
     port: 80

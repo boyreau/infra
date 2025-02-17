@@ -1,3 +1,4 @@
+---
 - name: Start dockerd
   ansible.builtin.shell:
     creates: /run/docker.pid
@@ -34,7 +35,7 @@
         dest: ./act_runner-latest.tar.gz
         owner: root
         group: root
-        mode: '0600'
+        mode: "0600"
 
     - name: Create sources directory
       ansible.builtin.file:
@@ -42,7 +43,7 @@
         state: directory
         owner: root
         group: root
-        mode: '0700'
+        mode: "0700"
 
 - name: Unpack and build act_runner
   tags: build
@@ -55,7 +56,7 @@
         remote_src: true
         owner: root
         group: root
-        mode: '0700'
+        mode: "0700"
 
     - name: Build act_runner
       tags: build
@@ -77,7 +78,7 @@
         state: directory
         owner: git
         group: git
-        mode: '0750'
+        mode: "0750"
       loop:
         - /etc/act_runner
         - /var/lib/act_runner

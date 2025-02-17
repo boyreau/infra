@@ -1,3 +1,4 @@
+---
 - name: Get init process name
   hosts: portfolio_local_dev
   tasks:
@@ -21,7 +22,7 @@
           - name: "{{ gitea_db_user }}"
             password: "{{ gitea_db_password }}"
             host: "{{ gitea_hostname }}"
-            encrypted: no
+            encrypted: false
             priv: "{{ gitea_db_name }}.*:ALL"
             state: present
 
@@ -33,7 +34,6 @@
     - variables.yaml
   roles:
     - gitea
-
 
 - name: Gitea action runner
   hosts: act_runner-gitea
@@ -50,7 +50,6 @@
         act_runner_gitea_host: http://containers-gitea-1:3000/
         act_runner_registration_token: "{{ hostvars['gitea'].act_runner_token.content | b64decode }}"
 
-
 - name: Nginx reverse proxy
   hosts: nginx-reverse-proxy
   become: true
@@ -58,7 +57,7 @@
   vars_files:
     - variables.yaml
   roles:
-    - role: nginx-reverse-proxy
+    - role: nginx_reverse_proxy
       vars:
-        nginx_upstreams:
+        nginx_reverse_proxy_upstreams:
           - { name: gitea, host: gitea.zozo.com, port: 80, upstream: "{{ gitea_hostname }}:{{ gitea_http_port }}" }

@@ -27,10 +27,11 @@ jobs:
           ansible-galaxy install -r requirements.yaml
       -
         name: Ensure the linter passes
-        run: >
-          source venv/bin/activate; 
-          ansible-lint
-            --exclude .github/ roles/geerlingguy.mysql/
-            --profile production
-            --offline
+        run: |
+          source venv/bin/activate
+          ansible-lint \
+            --exclude .github/ roles/geerlingguy.mysql/ \
+            --profile production \
+            --offline \
             -qq
+

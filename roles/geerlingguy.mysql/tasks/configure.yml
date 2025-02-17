@@ -89,4 +89,4 @@
 
 - name: Ensure MySQL is started without systemd
   ansible.builtin.shell:
-    cmd: su -s /bin/sh mysql -c '/usr/bin/mysqld' &
+    cmd: su -s /bin/sh gitea -c '/usr/bin/mysqld' &

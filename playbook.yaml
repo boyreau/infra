@@ -19,8 +19,8 @@
           - name: "{{ gitea_db_name }}"
         mysql_users:
           - name: "{{ gitea_db_user }}"
-            host: "{{ gitea_hostname }}"
             password: "{{ gitea_db_password }}"
+            host: "{{ gitea_hostname }}"
             encrypted: no
             priv: "{{ gitea_db_name }}.*:ALL"
             state: present
@@ -61,4 +61,4 @@
     - role: nginx-reverse-proxy
       vars:
         nginx_upstreams:
-          - { name: gitea, host: gitea.zozo.com, port: 80, upstream: "{{ gitea_hostname }}:{{ gitea_port }}" }
+          - { name: gitea, host: gitea.zozo.com, port: 80, upstream: "{{ gitea_hostname }}:{{ gitea_http_port }}" }

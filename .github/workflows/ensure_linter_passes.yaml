@@ -1,0 +1,36 @@
+name: Ensure linter passes on the repo
+on: [push]
+
+jobs:
+  Lint:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout repository
+        uses: actions/checkout@v4
+      -
+        name: Restore cache
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ./venv
+            ~/.gitconfig
+            ~/.ansible/roles
+          key: ${{ runner.os }}-ansible-cache
+      -
+        name: Install dependencies
+        run: |
+          python3 -m venv venv
+          source venv/bin/activate
+          pip install ansible
+          pip install ansible-playbook-grapher
+          ansible-galaxy install -r requirements.yaml
+      -
+        name: Ensure the linter passes
+        run: >
+          ansible-lint
+            --exclude .github/ roles/geerlingguy.mysql/
+            --profile production
+            --offline
+            -qq
